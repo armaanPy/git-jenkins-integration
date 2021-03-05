@@ -1,5 +1,5 @@
 pipeline {
-    agent {label: "linux && region-eu"}
+    agent  {label "linux && region-eu" }
     
     stages {
         stage('Build') {
