@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+		buildDescription 'AH-Test-Pipeline'
                 echo 'Building...'
             }
         }
