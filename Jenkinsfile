@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Hello ${params.USER_ID}"
-                echo 'Building...'
+                echo "Building ${params.VERSION}..."
             }
         }
 	    stage('Test') {
@@ -32,13 +32,13 @@ pipeline {
             }
             steps {
                 echo "Hello ${params.USER_ID}"
-                echo 'Testing...'
+                echo "Testing ${params.VERSION}..."
             }
         }
         stage('Deploy') {
             steps {
                 echo "Hello ${params.USER_ID}"
-                echo 'Deploying...'
+                echo "Deploying ${params.VERSION}..."
             }
         }
     }
