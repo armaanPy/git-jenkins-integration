@@ -12,15 +12,15 @@ pipeline {
     stages {
         stage('Initialise') {
             steps {
-                echo "Hello ${params.USERID}"
+                echo "Hello ${params.USER_ID}"
             script {
-                gv = load "script.groovy"
+                gv = load "initialise.groovy"
             }
             }
         }
         stage('Build') {
             steps {
-                echo "Hello ${params.USERID}"
+                echo "Hello ${params.USER_ID}"
                 echo 'Building...'
             }
         }
@@ -31,13 +31,13 @@ pipeline {
                 }
             }
             steps {
-                echo "Hello ${params.USERID}"
+                echo "Hello ${params.USER_ID}"
                 echo 'Testing...'
             }
         }
         stage('Deploy') {
             steps {
-                echo "Hello ${params.USERID}"
+                echo "Hello ${params.USER_ID}"
                 echo 'Deploying...'
             }
         }
