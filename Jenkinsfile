@@ -12,16 +12,18 @@ pipeline {
     stages {
         stage('Initialise') {
             steps {
-                echo "Hello ${params.USER_ID}"
-            script {
-                gv = load "initialise.groovy"
-            }
+                script {
+                    gv = load "initialise.groovy"
+                 }
             }
         }
         stage('Build') {
             steps {
                 echo "Hello ${params.USER_ID}"
                 echo "Building ${params.VERSION}..."
+                    script {
+                        gv.InitialiseApp()
+                    }
             }
         }
 	    stage('Test') {
