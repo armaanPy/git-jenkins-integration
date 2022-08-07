@@ -1,8 +1,8 @@
-def gv
+def code
 
 pipeline {
     agent any
-    
+    options { skipDefaultCheckout(true) }
     parameters {
         string(name: 'USER_ID', defaultValue: 'Armaan', description: '')
         choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
@@ -10,22 +10,29 @@ pipeline {
     }
 
     stages {
-        stage('Initialise') {
+        stage('Checkout SCM') {
             steps {
-                script {
-                    gv = load "initialise.groovy"
-                 }
+                checkout scm
             }
         }
-        stage('Build') {
+
+        stage('Load Script') {
             steps {
-                //echo "Hello ${params.USER_ID}"
-                //echo "Building ${params.VERSION}..."
                 script {
-                    gv.InitialiseApp()
+                    code = load "script.groovy"
                 }
             }
         }
+
+        stage('Build') {
+            steps {
+                echo "Hello ${params.USER_ID}"
+                script {
+                    code.buildApp()
+                }
+            }
+        }
+
 	    stage('Test') {
             when {
                 expression {
@@ -38,6 +45,7 @@ pipeline {
                 echo "Testing ${params.VERSION}..."
             }
         }
+
         stage('Deploy') {
             steps {
                 echo "Hello ${params.USER_ID}"
