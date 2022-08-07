@@ -19,11 +19,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo "Hello ${params.USER_ID}"
-                echo "Building ${params.VERSION}..."
-                    script {
-                        gv.InitialiseApp()
-                    }
+                //echo "Hello ${params.USER_ID}"
+                //echo "Building ${params.VERSION}..."
+                script {
+                    gv.InitialiseApp()
+                }
             }
         }
 	    stage('Test') {
@@ -34,6 +34,7 @@ pipeline {
             }
             steps {
                 echo "Hello ${params.USER_ID}"
+                echo 'This stage was only executed as the "executeTests" parameter was ticked'
                 echo "Testing ${params.VERSION}..."
             }
         }
