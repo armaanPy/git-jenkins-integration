@@ -1,6 +1,6 @@
 # git-jenkins-integration
 
-Git Jenkins integration from public localhost
+Git Jenkins integration from public localhost.
 
 ## To install Jenkinsfile validator in VSCode:
 
