@@ -1,0 +1,53 @@
+// Example parallel build on Windows and Linux agents.
+
+pipeline {
+    agent none
+
+    stages {
+        stage("Build and Deploy on LON-WIN-001") {
+            parallel {
+                stage("Windows") {
+                    agent {
+                        label "windows"
+                    }
+                    stages {
+                        stage("Build") {
+                            steps {
+                                bat "run-build.bat"
+                            }
+                        }
+                        stage("Deploy") {
+                            when {
+                                branch "main"
+                            }
+                            steps {
+                                bat "run-deploy.bat"
+                            }
+                        }
+                    }
+                }
+
+                stage("Build and Deploy on LON-RHEL7-001") {
+                    agent {
+                        label "linux"
+                    }
+                    stages {
+                        stage("Build") {
+                            steps {
+                                sh "./run-build.sh"
+                            }
+                        }
+                        stage("Deploy") {
+                             when {
+                                 branch "main"
+                             }
+                             steps {
+                                sh "./run-deploy.sh"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
