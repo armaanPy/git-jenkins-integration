@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    // triggers { pollSCM('*****')} <- Too resource consuming, prefer using webhooks
+
+    stages {
+        stage('Checkout') {
+            steps {
+            // Get some code from a GitHub repository
+            git branch: 'main', credentialsId: 'armaanpy-github', poll: false, url: 'https://github.com/armaanPy/jgsu-spring-petclinic'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                // Run Maven on a Unix agent.
+                sh './mvnw clean package'
+ 
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+        }
+    }
+    
+    post {
+        always {
+        // If Maven was able to run the tests, even if some of the tests failed, record the test results and archive the jar file.
+            junit '**/target/surefire-reports/TEST-*.xml'
+            archiveArtifacts 'target/*.jar'
+            
+        // Post-build, whenever any updates are made, send an email notification to intended user.
+        emailext subject: 'Changes have been made to \'${JOB_NAME\'} (\'${BUILD_NUMBER\')',
+            body: 'INFO: Changes have been made to \'${JOB_NAME\'} (\'${BUILD_NUMBER\')',
+            attachLog: true,
+            to: 'test@jenkins.io'
+        }
+    }
+    }
