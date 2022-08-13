@@ -11,7 +11,7 @@ pipeline {
     }
     parameters {
         string(name: 'USER_ID', defaultValue: '', description: '')
-        booleanParam(name: 'Execute tests?', defaultValue: true, description: '')
+        booleanParam(name: 'executeTests', defaultValue: true, description: '')
         choice(name: 'TESTS', choices: ['Regression', 'Performance', 'Integration'], description: '')
         choice(name: 'RELEASE', choices: ['1.1', '1.2', '1.3'], description: '')
     }
@@ -48,7 +48,7 @@ pipeline {
             }
             steps {
                 sh """
-                echo 'This stage was only executed as the "Execute Tests?" parameter was ticked.'
+                echo 'This stage was only executed as the "executeTests" parameter was ticked.'
                 echo "Test: ${params.TESTS} running on Release: ${params.RELEASE}"
                 """
             }
