@@ -3,6 +3,12 @@ def code
 pipeline {
     agent any
     options { skipDefaultCheckout(true) }
+    environment {
+        DEVELOPMENT = "algo-trade-dev.capital.com"
+        UAT = "algo-trade-uat.capital.com"
+        DEMO = "algo-trade-demo.capital.com"
+        PRODUCTION = "algo-trade-prod.capital.com"
+    }
     parameters {
         string(name: 'USER_ID', defaultValue: '', description: '')
         booleanParam(name: 'Execute tests?', defaultValue: true, description: '')
@@ -11,12 +17,7 @@ pipeline {
         string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
 
     }
-    environment {
-        DEVELOPMENT = "algo-trade-dev.capital.com"
-        UAT = "algo-trade-uat.capital.com"
-        DEMO = "algo-trade-demo.capital.com"
-        PRODUCTION = "algo-trade-prod.capital.com"
-    }
+
 
     stages {
         stage('Checkout SCM') {
