@@ -14,8 +14,7 @@ pipeline {
         booleanParam(name: 'Execute tests?', defaultValue: true, description: '')
         choice(name: 'TESTS', choices: ['Regression', 'Performance', 'Integration'], description: '')
         choice(name: 'RELEASE', choices: ['1.1', '1.2', '1.3'], description: '')
-        string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
-
+        string(name: 'TARGET_ENVIRONMENT', defaultValue: "${env.PRODUCTION}", description:'')
     }
 
 
@@ -62,11 +61,10 @@ pipeline {
             input {
                 message 'Deploy?'
                 ok 'Do it!'
-                parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
-                }
+                //parameters {
+                    //string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
+                //}
             }
-
             steps {
                 echo "Deploying "
             }
