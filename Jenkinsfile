@@ -1,27 +1,32 @@
-// code == load "script.groovy"
 def code
 
 pipeline {
     agent any
-    // Disable DefaultCheckout so I can include it manually in 'Checkout SCM' stage
     options { skipDefaultCheckout(true) }
     parameters {
-        string(name: 'USER_ID', defaultValue: 'Armaan', description: '')
-        // Set Yes/No param for the ability to execute tests
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
-        // Specify different build versions
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
+        string(name: 'USER_ID', defaultValue: '', description: '')
+        booleanParam(name: 'Execute tests?', defaultValue: true, description: '')
+        choice(name: 'TESTS', choices: ['Regression', 'Performance', 'Integration'], description: '')
+        choice(name: 'RELEASE', choices: ['1.1', '1.2', '1.3'], description: '')
+        string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
+
+    }
+    environment {
+        DEVELOPMENT = "algo-trade-dev.capital.com"
+        UAT = "algo-trade-uat.capital.com"
+        DEMO = "algo-trade-demo.capital.com"
+        PRODUCTION = "algo-trade-prod.capital.com"
     }
 
     stages {
-        // Manually checkout scm
         stage('Checkout SCM') {
             steps {
                 checkout scm
+                //git branch: 'main', credentialsId: 'armaanpy-github', poll: false, url: 'https://github.com/armaanPy/jgsu-spring-petclinic' <- Specify branch via Git Plugin
             }
-        }
-        // Initialise code as "script.groovy"
-        stage('Load Script') {
+        } 
+
+        stage('Initialise') {
             steps {
                 script {
                     code = load "script.groovy"
@@ -31,8 +36,6 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "Hello ${params.USER_ID}"
-                // Call upon buildApp function within script.groovy
                 script {
                     code.buildApp()
                 }
@@ -40,24 +43,40 @@ pipeline {
         }
 
 	    stage('Test') {
-            // booleanParam for if you want to execute this stage
             when {
                 expression {
                     params.executeTests
                 }
             }
             steps {
+                sh """
                 echo "Hello ${params.USER_ID}"
                 echo 'This stage was only executed as the "executeTests" parameter was ticked'
                 echo "Testing ${params.VERSION}..."
+                """
             }
         }
 
         stage('Deploy') {
+            input {
+                message 'Deploy?'
+                ok 'Do it!'
+                parameters {
+                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
+                }
+            }
+
             steps {
-                echo "Hello ${params.USER_ID}"
-                echo "Deploying ${params.VERSION}..."
+                echo "Deploying "
             }
         }
     }
+        post {
+            success {
+                echo "Build: ${BUILD_NUMBER} successful."
+            }
+            failure {
+                echo "Build: ${BUILD_NUMBER} failed."
+            }
+        }
 }
