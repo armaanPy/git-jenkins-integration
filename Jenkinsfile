@@ -60,7 +60,7 @@ pipeline {
                 message 'Deploy?'
                 ok 'Do it!'
                 parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "${PRODUCTION}", description:'')
+                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "${env.PRODUCTION}", description:'')
                 }
             }
             steps {
