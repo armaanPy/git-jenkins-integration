@@ -48,9 +48,8 @@ pipeline {
             }
             steps {
                 sh """
-                echo "Hello ${params.USER_ID}"
-                echo 'This stage was only executed as the "executeTests" parameter was ticked'
-                echo "Testing ${params.VERSION}..."
+                echo 'This stage was only executed as the "Execute Tests?" parameter was ticked.'
+                echo "Test: ${params.TESTS} running on Release: ${params.RELEASE}"
                 """
             }
         }
@@ -60,7 +59,7 @@ pipeline {
                 message 'Deploy?'
                 ok 'Do it!'
                 parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "${env.PRODUCTION}", description:'')
+                    string(name: 'TARGET_ENVIRONMENT', defaultValue: "PROD", description:'')
                 }
             }
             steps {
