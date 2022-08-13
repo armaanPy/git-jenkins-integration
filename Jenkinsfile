@@ -63,7 +63,7 @@ pipeline {
                 }
             }
             steps {
-                echo "${params.USER_ID} successfully deployed Build ${params.RELEASE} to ${params.TARGET_ENVIRONMENT}."
+                echo "${params.USER_ID} successfully deployed Build ${params.RELEASE} to ${TARGET_ENVIRONMENT}."
             }
         }
     }
