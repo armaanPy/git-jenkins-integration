@@ -9,9 +9,9 @@ pipeline {
         stage("Build and Deploy on Windows and Linux") {
             parallel {
                 stage("Windows") {
-                    agent {
-                        label "windows"
-                    }
+                    //agent {
+                        //label "windows"
+                    //}
                     stages {
                         stage("Build") {
                             steps {
@@ -30,9 +30,9 @@ pipeline {
                 }
 
                 stage("Linux") {
-                    agent {
-                        label "linux"
-                    }
+                    //agent {
+                        //label "linux"
+                    //}
                     stages {
                         stage("Build") {
                             steps {
