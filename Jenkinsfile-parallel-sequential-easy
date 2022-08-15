@@ -1,0 +1,55 @@
+// DEMO VERSION: Example running builds on both Windows and Linux.
+// Parallel Sequential Stages - can run multiple stages in each parallel branch giving you more visibility into the progress of your Pipeline without having to check the logs to see exactly which step is currently running where, etc.
+// https://www.jenkins.io/blog/2018/07/02/whats-new-declarative-piepline-13x-sequential-stages/
+
+pipeline {
+    agent none
+
+    stages {
+        stage("Build and Deploy on Windows and Linux") {
+            parallel {
+                stage("Windows") {
+                    agent {
+                        label "windows"
+                    }
+                    stages {
+                        stage("Build") {
+                            steps {
+                                echo "run-build.bat"
+                            }
+                        }
+                        stage("Deploy") {
+                            when {
+                                branch "main"
+                            }
+                            steps {
+                                echo "run-deploy.bat"
+                            }
+                        }
+                    }
+                }
+
+                stage("Linux") {
+                    agent {
+                        label "linux"
+                    }
+                    stages {
+                        stage("Build") {
+                            steps {
+                                echo "./run-build.sh"
+                            }
+                        }
+                        stage("Deploy") {
+                             when {
+                                 branch "main"
+                             }
+                             steps {
+                                echo "./run-deploy.sh"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

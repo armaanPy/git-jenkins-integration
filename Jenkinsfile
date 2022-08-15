@@ -3,6 +3,8 @@ def code
 pipeline {
     agent any
     options { skipDefaultCheckout(true) }
+    // Org likely enabled global timestamper in Jenkins configuration, but if not...
+    options { timestamps () }
     environment {
         DEVELOPMENT = "algo-trade-dev.capital.com"
         UAT = "algo-trade-uat.capital.com"
@@ -67,7 +69,7 @@ pipeline {
             }
         }
     }
-    
+
         post {
             success {
                 echo "Build: ${BUILD_NUMBER} successful."
