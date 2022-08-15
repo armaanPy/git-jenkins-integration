@@ -2,9 +2,11 @@ def code
 
 pipeline {
     agent any
-    options { skipDefaultCheckout(true) }
     // Org likely enabled global timestamper in Jenkins configuration, but if not...
-    options { timestamps () }
+    options { 
+        skipDefaultCheckout(true) 
+        timestamps () 
+        }
     environment {
         DEVELOPMENT = "algo-trade-dev.capital.com"
         UAT = "algo-trade-uat.capital.com"
@@ -53,6 +55,7 @@ pipeline {
                 echo 'This stage was only executed as the "executeTests" parameter was ticked.'
                 echo "Test: ${params.TESTS} running on Release: ${params.RELEASE}"
                 """
+                writeFile file: 'test-results.txt', text: 'passed'
             }
         }
 
@@ -73,6 +76,7 @@ pipeline {
         post {
             success {
                 echo "Build: ${BUILD_NUMBER} successful."
+                archiveArtifacts 'test-results.txt'
             }
             failure {
                 echo "Build: ${BUILD_NUMBER} failed."
