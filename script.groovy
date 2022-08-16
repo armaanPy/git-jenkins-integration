@@ -19,6 +19,8 @@ def auditTools() {
     '''
     } catch(Exception e) {
         println("Exception: ${e}")
+    } finally {
+        // The finally block always executes.
     }
 }
 
