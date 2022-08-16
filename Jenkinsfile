@@ -1,13 +1,18 @@
-def code
+// Let Jenkins know how to fetch a shared library:
+library identifier: 'jenkins-pipeline-demo-library@master',
+        retriever: modernSCM([$class: 'GitSCMSource',
+        remote: 'https://github.com/sixeyed/jenkins-pipeline-demo-library.git'])
+// @Library('devops') _ <- Nom method
 
-// getVersionSuffix() < - Identify if the build is a Release Candidate. And if so, provide it with a Release Candidate Suffix.
+def code
+// getVersionSuffix() < - SEMANTIC VERSIONING | Identify if the build is a Release Candidate. And if so, provide it with a Release Candidate Suffix.
 
 pipeline {
     agent any
     // Org likely enabled global timestamper in Jenkins configuration, but if not...
     options { 
         skipDefaultCheckout(true) 
-        timestamps () 
+        //timestamps () 
         }
     environment {
         DEVELOPMENT = "algo-trade-dev.capital.com"
@@ -86,6 +91,18 @@ pipeline {
             }
             steps {
                 echo "${params.USER_ID} successfully deployed Build ${params.RELEASE} to ${TARGET_ENVIRONMENT}."
+            }
+        }
+
+        stage('Publish') {
+            when {
+                // This stage will only run WHEN params.RC value is set to True.
+                expression {
+                    return params.RC
+                }
+            }
+            steps {
+                echo "${params.USER_ID} successfully published ${env.VERSION} with suffix: ${VERSION_SUFFIX}."
             }
         }
     }
