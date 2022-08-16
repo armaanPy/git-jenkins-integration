@@ -1,5 +1,7 @@
 def code
 
+// getVersionSuffix() < - Identify if the build is a Release Candidate. And if so, provide it with a Release Candidate Suffix.
+
 pipeline {
     agent any
     // Org likely enabled global timestamper in Jenkins configuration, but if not...
@@ -12,12 +14,15 @@ pipeline {
         UAT = "algo-trade-uat.capital.com"
         DEMO = "algo-trade-demo.capital.com"
         PRODUCTION = "algo-trade-prod.capital.com"
+        VERSION = "0.1.0" // getVersionSuffix()
+        VERSION_RC = "RC.1" // getVersionSuffix()
     }
     parameters {
         string(name: 'USER_ID', defaultValue: '', description: '')
         booleanParam(name: 'executeTests', defaultValue: true, description: '')
         choice(name: 'TESTS', choices: ['Regression', 'Performance', 'Integration'], description: '')
         choice(name: 'RELEASE', choices: ['1.1', '1.2', '1.3'], description: '')
+        booleanParam(name:'RC', defaultValue: false, description:'Is this a Release Candidate?') // getVersionSuffix()
     }
 
     stages {
@@ -36,8 +41,20 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Audit Tools') {
             steps {
+                script {
+                    code.auditTools()
+                }
+            }
+        } 
+
+        stage('Build') {
+            environment {
+                VERSION_SUFFIX = code.getVersionSuffix() // getVersionSuffix()
+            }
+            steps {
+                echo "Building ${env.VERSION} with suffix: ${VERSION_SUFFIX}" // getVersionSuffix()
                 script {
                     code.buildApp()
                 }
