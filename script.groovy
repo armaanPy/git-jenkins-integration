@@ -11,10 +11,15 @@ def deployApp() {
 }
 
 def auditTools() {
+    try {
     sh '''
+    lsb_release -a
     git version
     docker version
     '''
+    } catch(Exception e) {
+        println("Exception: ${e}")
+    }
 }
 
 def getVersionSuffix() {
