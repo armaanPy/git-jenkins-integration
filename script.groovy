@@ -12,7 +12,6 @@ def deployApp() {
 
 def auditTools() {
     sh '''
-    lsb_release -a
     git version
     docker version
     '''
