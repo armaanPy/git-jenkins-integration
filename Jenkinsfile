@@ -9,6 +9,7 @@ def code
 
 pipeline {
     agent any
+    // agent  {label "linux && region-eu" }
     // Org likely enabled global timestamper in Jenkins configuration, but if not...
     options { 
         skipDefaultCheckout(true) 
@@ -37,7 +38,6 @@ pipeline {
                 //git branch: 'main', credentialsId: 'armaanpy-github', poll: false, url: 'https://github.com/armaanPy/jgsu-spring-petclinic' <- Specify branch via Git Plugin
             }
         } 
-
         stage('Initialise') {
             steps {
                 script {
@@ -45,7 +45,6 @@ pipeline {
                 }
             }
         }
-
         stage('Audit Tools') {
             steps {
                 script {
@@ -53,7 +52,6 @@ pipeline {
                 }
             }
         } 
-
         stage('Build') {
             environment {
                 VERSION_SUFFIX = code.getVersionSuffix() // getVersionSuffix()
@@ -65,7 +63,6 @@ pipeline {
                 }
             }
         }
-
 	    stage('Test') {
             when {
                 expression {
@@ -80,7 +77,6 @@ pipeline {
                 writeFile file: 'test-results.txt', text: 'passed'
             }
         }
-
         stage('Deploy') {
             input {
                 message 'Deploy?'
@@ -93,7 +89,6 @@ pipeline {
                 echo "${params.USER_ID} successfully deployed Build ${params.RELEASE} to ${TARGET_ENVIRONMENT}."
             }
         }
-
         stage('Publish') {
             when {
                 // This stage will only run WHEN params.RC value is set to True.

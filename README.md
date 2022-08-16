@@ -30,6 +30,12 @@ Git Jenkins integration from public localhost.
 - Now, go to your Jenkins project to add Deploy Key:
   - Pipelines -> Pipeline/Definition -> Specify SSH remote url (hussaarm@github.com:<namespace>/project.git) and then select intended Deploy Key
 
+## Infrastructure
+
+- Jenkins has always had a master agent architecture, where master does all of the admin work, such as hosting the web UI, firing the job triggers, and storing the data.
+- It is the agents that do the actual builds.
+- Best practice to commission new agents for new requirements i.e. if a build requires JDK 8, instead of installing on an existing agent (as that may break multiple builds), just commission a new agent.
+
 ## Agents
 
 - Builds should be agent compatable.
