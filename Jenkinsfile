@@ -96,6 +96,9 @@ pipeline {
             }
         }
         stage('Publish') {
+            environment {
+                VERSION_SUFFIX = code.getVersionSuffix() // getVersionSuffix()
+            }
             when {
                 // This stage will only run WHEN params.RELEASE value is set to True.
                 expression {
