@@ -56,6 +56,12 @@ pipeline {
             environment {
                 VERSION_SUFFIX = code.getVersionSuffix() // getVersionSuffix()
             }
+            when {
+                // This stage will only run WHEN params.RC value is set to False.
+                expression {
+                    return !params.RC
+                }
+            }
             steps {
                 echo "Building ${env.VERSION} with suffix: ${VERSION_SUFFIX}" // getVersionSuffix()
                 script {
