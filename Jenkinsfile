@@ -28,7 +28,7 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description: '')
         choice(name: 'TESTS', choices: ['Regression', 'Performance', 'Integration'], description: '')
         choice(name: 'RELEASE', choices: ['1.1', '1.2', '1.3'], description: '')
-        booleanParam(name:'RC', defaultValue: false, description:'Is this a Release Candidate?') // getVersionSuffix()
+        booleanParam(name:'PERFORM_RELEASE', defaultValue: false, description:'Tick this box if this is a release build.') // getVersionSuffix()
     }
 
     stages {
@@ -57,9 +57,9 @@ pipeline {
                 VERSION_SUFFIX = code.getVersionSuffix() // getVersionSuffix()
             }
             when {
-                // This stage will only run WHEN params.RC value is set to False.
+                // This stage will only run WHEN params.RELEASE value is set to False.
                 expression {
-                    return !params.RC
+                    return !params.PERFORM_RELEASE
                 }
             }
             steps {
@@ -97,9 +97,9 @@ pipeline {
         }
         stage('Publish') {
             when {
-                // This stage will only run WHEN params.RC value is set to True.
+                // This stage will only run WHEN params.RELEASE value is set to True.
                 expression {
-                    return params.RC
+                    return params.PERFORM_RELEASE
                 }
             }
             steps {
