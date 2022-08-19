@@ -66,6 +66,8 @@ pipeline {
                 echo "Building ${env.VERSION} with suffix: ${VERSION_SUFFIX}" // getVersionSuffix()
                 script {
                     code.buildApp()
+                    // Normally would put build commands here:
+                        // sh 'mvn clean compile'
                 }
             }
         }
@@ -107,6 +109,8 @@ pipeline {
             }
             steps {
                 echo "${params.USER_ID} successfully published ${env.VERSION} with suffix: ${VERSION_SUFFIX}."
+                // Normally would put build commands here:
+                    // sh 'mvn clean package'
             }
         }
     }

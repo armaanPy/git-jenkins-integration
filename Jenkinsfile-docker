@@ -1,0 +1,48 @@
+def image
+
+pipeline {
+    agent any
+        // docker {
+            // image 'mcr.microsoft.com/dotnet/core/sdk:3.1.101'
+        // }
+
+        // dockerfile {
+           // dir 'm4'
+        // }
+
+    stages {
+        stage('Checkout') {
+            steps {
+            // Get some code from a GitHub repository
+            git branch: 'main', credentialsId: 'armaanpy-github', poll: false, url: 'https://github.com/armaanPy/jgsu-spring-petclinic'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    image = docker.build("sixeyed/pi:psod-pipelines", "--pull -f m4/Dockerfile m4")
+                }
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                script {
+                    container = image.run()
+                    container.stop()
+                }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: "docker-hub", url: "" ]) {
+                        image.push()
+                    }
+                }
+            }
+        }
+    }
+    }
