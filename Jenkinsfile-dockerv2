@@ -1,0 +1,21 @@
+// This Jenkinsfile is an example, it will not work without the app src code.
+def dockerImage;
+    
+node('docker') {
+    stage('Checkout SCM') {
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']],
+        userRemoteConfigs: [[url: 'https://github.com/armaanPy/docker-tutorial']]])
+    }
+    
+    // Need to figure out how to semantic versioning on build tags.
+    stage('Build') {
+        dockerImage = docker.build('armaanpy/gsd:v2', '-f gsd.Dockerfile .')
+    }
+
+    stage('Push') {
+        docker.withRegistry('', 'dockerhubcreds') {
+            dockerImage.push()
+        }
+    }
+}
+
