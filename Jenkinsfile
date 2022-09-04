@@ -71,6 +71,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Build and check its functioning')
+            // This step will run the source code, if it is then fine, if it is not then it will archive the source code for us to view
+            try{
+                sh 'python3 betaregression.py'
+            } finally{
+                archiveArtifacts artifacts: '/SourceCodeLocation/*.*'
+            }
+
 	    stage('Test') {
             when {
                 expression {
